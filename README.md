@@ -7,22 +7,6 @@ Sentiment analysis has been on the rise - both because of the availability of ne
 I'm using the Amazon Reviews data set which can be found at https://www.kaggle.com/bittlingmayer/amazonreviews .  You'll want to click the download button, unzip the downloaded file, and then unzip the files within the newly unzipped file (7-zip if you get stuck).  You'll want test.ft.txt and train.ft.txt in the same folder as LSTM.py.  You'll notice that these data sets are very large!  In fact, the testing set has 400,000 training examples, so while we're playing around with different models it suffices to take some subset of test.ft.txt as our full train/test/validation set.  
 
 
-
-# Bag-of-Words Models
-A bag-of-words model is one in which each input (in our case, each review) is first reduced to an unordered set of the words which occur within the input.  For example, the reviews "Great product but the customer service was terrible" and "Terrible product but the customer service was great" have exactly the same bag-of-words reductions ( the set {'but', 'customer', 'great', 'product', 'service', 'terrible', 'the', 'was'} ), even though the sentiments are very different.  Even though this bag-of-words idea is terribly naive, it works relatively well.  Good reviews will have more positive words in them and bad reviews will have more negative words in them.  Moreover there are some negative words which don't often show up in positive reviews at all, and vice-versa.  
-
-By the way, this is the reason that above, when we were splitting our data into labels and reviews, I mentioned the idea of also separating out the titles.  A bag-of-words reduction of a review title is much less likely to lose much information, and important keywords like 'great' and 'terrible' are less likely to be lost in the noise of a giant bag of words.  We will revisit this idea later, and in particular we'll create a model out of two smaller models - one trained on titles and one trained on review texts.  This model will work by first trying to classify the review based on title alone, and if it returns a label with very high confidence, we use that answer; otherwise we look at the review text.  This separation of one feature into two is a form of 'feature engineering' and is a common practice in real-world classification and regression tasks.
-
-Our first sentiment analyzer will be a bag-of-words model.  We'll need to process our feature set in various important ways:
- - We'll need to 'tokenize' each review down to constituent words.
- - We'll probably want to reduce the possible vocabulary down to a few thousand words, both to decrease training time and to decrease overfitting (some words may appear in only one review and thus be unfairly attributed a positive/negative score).  We'll use the most commonly occuring 3000 words for now.
- - We'll want to make sure each word is lowercase so we don't end up counting the same word as several different words.
- - We'll want to 'stem' or 'lemmatize' our words so that words which are essentially the same ('is', 'are', 'were', 'was', 'be') or ('happy', 'happily') are put into a standard form, again to avoid counting essentially the same word several times.  In general, stemming is a more crude procedure which has the advantage of usually saving disk space, whereas lemmatizing is a more intelligent procedure which better preserves the original meaning of the text.  Both, however, lose some amount of information.
- - We may be interested in tagging the part of speech of each word, or in identifying certain commonly-occurring groupings of parts of speech such as an 'adverb-verb' pair or an 'adjective-noun' pair.  We won't do this in this project, but we point it out as a possibility because NLTK has powerful built-in tools for doing all sorts of tagging of this form.
- - Finally, we'll want to loop through our `reviews` set and for each review output a bag-of-words representation of that review.
- 
-Let's get to it.
-
 ## Preparing the features
  
  ```python
