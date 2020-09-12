@@ -147,8 +147,6 @@ print(accuracies/10)
 With total train/test size 10,000, we got an average accuracy of .824.  This is pretty good!  But let's not get too excited - the data sets we used were small and may have had too many similar reviews by chance.  To be sure, we repeated the experiment with 160,000 test/train examples and got an average accuracy of .818.
 
 
-I'd originally planned on discussing how to get nltk and scikit-learn working together --- and may do so on some future update to this project.  For now, however, let's move on to LSTM models.
-
 # Sequential Models
 The very naive bag-of-words model worked surprisingly well, achieving over 80% accuracy on the sentiment classification task we gave it.  Let's turn our attention to neural networks and see how they fare.
 
